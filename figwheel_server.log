@@ -1,0 +1,60 @@
+Figwheel: focusing on build-ids (dev)
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 7.413 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/goog/deps.js
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.119 seconds.[0m
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.099 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.077 seconds.[0m
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.127 seconds.[0m
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.077 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[32mSuccessfully compiled "resources/public/js/compiled/perished.js" in 0.095 seconds.[0m
+notifying browser that file changed:  resources/public/js/compiled/out/cljs_deps.js
+notifying browser that file changed:  /perished/core.js
+[0mCompiling "resources/public/js/compiled/perished.js" from ["src"]...
+[31mCompiling "resources/public/js/compiled/perished.js" failed.[0m
+java.io.FileNotFoundException: target/figwheel_temp/dev/figwheel/connect.cljs (No such file or directory)
+ at java.io.FileOutputStream.open (FileOutputStream.java:-2)
+    java.io.FileOutputStream.<init> (FileOutputStream.java:213)
+    clojure.java.io/fn (io.clj:230)
+    clojure.java.io$fn__8641$G__8604__8648.invoke (io.clj:69)
+    clojure.java.io/fn (io.clj:166)
+    clojure.java.io$fn__8654$G__8608__8661.invoke (io.clj:69)
+    clojure.java.io$writer.doInvoke (io.clj:119)
+    clojure.lang.RestFn.invoke (RestFn.java:410)
+    figwheel_sidecar.auto_builder$create_connect_script_BANG_.invoke (auto_builder.clj:130)
+    figwheel_sidecar.auto_builder$create_connect_script_if_needed_BANG_.invoke (auto_builder.clj:142)
+    figwheel_sidecar.auto_builder$add_connect_script_BANG_.invoke (auto_builder.clj:147)
+    figwheel_sidecar.auto_builder$insert_figwheel_connect_script$fn__17452.invoke (auto_builder.clj:164)
+    figwheel_sidecar.auto_builder$warning$fn__17418.invoke (auto_builder.clj:73)
+    clojurescript_build.auto$time_build$fn__17214.invoke (auto.clj:55)
+    clojurescript_build.auto$after$fn__17220.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__17220.invoke (auto.clj:64)
+    clojurescript_build.auto$after$fn__17220.invoke (auto.clj:64)
+    clojurescript_build.auto$error$fn__17223.invoke (auto.clj:71)
+    clojurescript_build.auto$before$fn__17217.invoke (auto.clj:60)
+    clojurescript_build.auto$make_conditional_builder$fn__17235.invoke (auto.clj:103)
+    clojure.core$mapv$fn__6311.invoke (core.clj:6353)
+    clojure.lang.ArrayChunk.reduce (ArrayChunk.java:58)
+    clojure.core.protocols/fn (protocols.clj:98)
+    clojure.core.protocols$fn__6057$G__6052__6066.invoke (protocols.clj:19)
+    clojure.core.protocols$seq_reduce.invoke (protocols.clj:31)
+    clojure.core.protocols/fn (protocols.clj:60)
+    clojure.core.protocols$fn__6031$G__6026__6044.invoke (protocols.clj:13)
+    clojure.core$reduce.invoke (core.clj:6289)
+    clojure.core$mapv.invoke (core.clj:6353)
+    clojurescript_build.auto$autobuild_STAR_$fn__17321$state_machine__8989__auto____17322$fn__17327.invoke (auto.clj:186)
