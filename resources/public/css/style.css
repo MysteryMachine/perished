@@ -1,2 +1,7 @@
-/* some style */
-
+body{
+  background-color: #222; 
+  color: #964;
+  font-family: "Helvetica";
+  width: 100%;
+  line-height: 1.5;
+}

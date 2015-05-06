@@ -4,29 +4,31 @@
 
 (enable-console-print!) 
 
-(defrecord ChClass [name passives actions sub-passives sub-actions])
-(def lithographer (ChClass. "Lithographer" [] [] [] []))
+(defrecord SkillDef [passives actives])
+(defrecord SkillClass [name major minor])
+(def lithographer 
+  (SkillClass. "Lithographer"
+            (SkillDef. [] [])
+            (SkillDef. [] [])))
 (def character-classes [lithographer])
 
-(defrecord Character 
+(defrecord CharacterClass
   ;; health - a number declaring  health left
   ;; class and subclass are of type ChClass
   ;; status is of type [Passive] 
-  [health chclass sub-chclass statuses])
+  [chclass sub-chclass])
 
-(defmulti max-health :name)
+(defmulti max-health (comp :class :name))
 (defmethod max-health "Lithographer" [_]  10)
 
-(defn actions [char] 
-  (concat (.. char chclass actions) (.. char sub-chclass sub-actions)))
+(defn actives [char] 
+  (concat (.. char class major major actives) (.. char class minor minor actives)))
 (defn passives [char] 
   (flatten [(.. char chclass passives) 
             (.. char sub-chclass sub-passives)
             (.statuses char)]))
 
-(defn new-character [chclass sub-chclass]
-  (Character. (max-health chclass) chclass sub-chclass [] ))
-(defn player-character [] (new-character lithographer lithographer))
+(defn random-class [] (CharacterClass. lithographer lithographer))
 
 
 (defn new-map [] { "Castle Gates" false 
@@ -34,17 +36,22 @@
                    "Graveyard" false
                    "Throne Room" false })
 
-(defonce app-state 
-  (atom { :party [(player-character) (player-character)
-                  (player-character) (player-character)]
-          :map (new-map)}))
+(def app-state 
+  (atom { :party [(random-class) (random-class)
+                  (random-class) (random-class)]
+          :game-map (new-map)
+          :battle []}))
 
 (om/root
   (fn [data owner]
     (reify om/IRender
       (render [_]
-        (dom/div nil 
-                 (dom/h1 nil "hello") 
-                 (dom/h2 nil "hello!")))))
+        (apply dom/div 
+               nil
+               (let [{:keys [game-map battle party]} @app-state] 
+                 (println party)
+                 [(dom/div nil (str "game: "  game-map))
+                  (dom/div nil (str "battle: " battle))
+                  (dom/div #js{:style #js{:padding-left "20px"}} (str party))])))))
   app-state
   {:target (. js/document (getElementById "app"))})
