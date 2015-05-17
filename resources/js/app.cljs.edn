@@ -1,0 +1,2 @@
+{:require  [perished.app]
+ :init-fns [perished.app/init]}
