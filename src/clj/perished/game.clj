@@ -15,4 +15,4 @@
      (defn ~'init []
        (reagent/render-component
          (~game-name)
-         (.getElementById js/document "container"))))) 
+         (.getElementById js/document "app"))))) 

@@ -1,4 +1,4 @@
-(ns perished.app
+(ns perished.core
   (:require [cljs.core.async :as async]
             [reagent.core :as reagent :refer [atom]]
             [jamesmacaulay.zelkova.signal :as zelkova]
@@ -50,3 +50,4 @@
   
 (g/defgame perished init-state g/signal s/view) 
    
+(init)
