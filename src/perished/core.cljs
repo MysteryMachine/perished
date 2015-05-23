@@ -49,5 +49,6 @@
    :game-map locations })
   
 (g/defgame perished init-state g/signal s/view) 
-   
 (init)
+
+(defn on-js-reload []) 
