@@ -6,9 +6,7 @@
        (cljs.core.async/chan))
      (def ~'button-signal 
        (jamesmacaulay.zelkova.signal/input nil ::button ~'button-chan))
-     (def ~'state-signal  
-       (jamesmacaulay.zelkova.signal/input ~init-state))
-     (def ~'app-signal (~signal-fn ~'state-signal ~'button-signal))
+     (def ~'app-signal (~signal-fn ~'init-state ~'button-signal))
      (def ~'app-atom 
        (jamesmacaulay.zelkova.signal/pipe-to-atom ~'app-signal))
      (defn ~game-name [] 
