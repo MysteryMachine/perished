@@ -11,9 +11,12 @@
 (enable-console-print!) 
 
 (def lithographer 
-  (c/Class. "Lithographer"
-            (c/SkillSet. [] [])
-            (c/SkillSet. [] [])))
+  (c/Class. 
+    "Lithographer"
+    (c/SkillSet. [] 
+                 [])
+    (c/SkillSet. [] 
+                 [])))
 
 (def classes 
   [lithographer])
@@ -43,12 +46,9 @@
      ["Stables" 0 0]
      ["Chapel" 0 0]]))
  
-(def init-state 
-  {:perished.screen/stage :menu
-   :party (l/rtake 4 (random-char-def))
-   :game-map locations })
-  
-(g/defgame perished init-state g/signal s/view) 
-(init)
+(defonce init-state 
+  (atom {:perished.screen/stage :menu
+         :party (l/rtake 4 (random-char-def))
+         :game-map locations }))
 
-(defn on-js-reload []) 
+(g/defgame perished init-state g/game s/view)

@@ -21,7 +21,7 @@
     :builds [{:id "dev"
               :source-paths ["src"]
               
-              :figwheel { :on-jsload "perished.core/on-js-reload" }
+              :figwheel { :on-jsload "perished.core/init" }
 
               :compiler {:main perished.core
                          :asset-path "js/compiled/out"
