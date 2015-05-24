@@ -4,9 +4,9 @@
 
 (defn new-location 
   "Creates a new unvisited Location"
-  [name x y] (Location. name x y falsE))
+  [name x y] (Location. name x y false))
 (def locations
-  (map (fn [[name x y]] (m/new-location name x y)) 
+  (map (fn [[name x y]] (new-location name x y)) 
     [["Porticullis" 0 0]
      ["Throne Room" 0 0]
      ["Crypt" 0 0]

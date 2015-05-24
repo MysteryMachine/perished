@@ -7,7 +7,9 @@
                 ~'inputs (->> 
                           (jamesmacaulay.zelkova.signal/map 
                             vector
-                            (jamesmacaulay.zelkova.signal/input nil ::button ~'button-chan)
+                            (jamesmacaulay.zelkova.signal/input identity 
+                                                                ::button 
+                                                                ~'button-chan)
                             ~'time-deltas)
                           (jamesmacaulay.zelkova.signal/sample-on ~'time-deltas))]
            (jamesmacaulay.zelkova.signal/reductions ~game-fn @~outer-atom ~'inputs))
