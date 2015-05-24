@@ -2,7 +2,8 @@
   (:require [cljs.core.async :as async
              :refer [put!]]))
 
-(defmulti  view :view)
+(defn view-dispatch [data _] (:view data))
+(defmulti  view view-dispatch)
 (defmethod view :default [data _] [:div (str data)]) 
 (defmethod view :menu [data bchan]
   [:div 
