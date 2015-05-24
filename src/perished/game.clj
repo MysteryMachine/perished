@@ -6,11 +6,12 @@
          (let [time-deltas# (jamesmacaulay.zelkova.time/fps 30)
                inputs# (->> 
                         (jamesmacaulay.zelkova.signal/map 
-                         identity
-                         (jamesmacaulay.zelkova.signal/input identity 
-                                                             ::button 
-                                                             button-chan#))
-                          (jamesmacaulay.zelkova.signal/sample-on time-deltas#))]
+                          vector
+                          (jamesmacaulay.zelkova.signal/input identity 
+                                                              ::button 
+                                                              button-chan#)
+                          time-deltas#)
+                        (jamesmacaulay.zelkova.signal/sample-on time-deltas#))]
            (jamesmacaulay.zelkova.signal/reductions ~game-fn @~app-atom inputs#))]
      (jamesmacaulay.zelkova.signal/pipe-to-atom app-signal# ~app-atom)
      (defn ~game-name []

@@ -8,7 +8,7 @@
 (defmulti game game-dispatch)
 (defmethod game :default [state _]
   state)
-(defmethod game :menu [state button] 
+(defmethod game :menu [state [button _]] 
   (if (= button :new-game) 
     (assoc state :view :intro)
     state))
