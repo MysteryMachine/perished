@@ -6,12 +6,13 @@
          (let [~'time-deltas (jamesmacaulay.zelkova.time/fps 30)
                 ~'inputs (->> 
                           (jamesmacaulay.zelkova.signal/map 
-                           vector
-                           (jamesmacaulay.zelkova.signal/input nil ::button ~'button-chan)
-                           ~'time-deltas)
+                            vector
+                            (jamesmacaulay.zelkova.signal/input nil ::button ~'button-chan)
+                            ~'time-deltas)
                           (jamesmacaulay.zelkova.signal/sample-on ~'time-deltas))]
            (jamesmacaulay.zelkova.signal/reductions ~game-fn @~outer-atom ~'inputs))
-         ~'app-atom ('jamesmacaulay.zelkova.signal/pipe-to-atom ~'app-signal ~outer-atom)
+         ~'live-signal (jamesmacaulay.zelkova.signal/spawn ~'app-signal)
+         ~'app-atom ('jamesmacaulay.zelkova.signal/pipe-to-atom ~'live-signal ~outer-atom)
          ~'render (fn [] 
                     (let [~'data @~'app-atom]
                       (~view-fn ~'data ~'button-chan)))]
