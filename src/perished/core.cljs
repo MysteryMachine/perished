@@ -10,6 +10,7 @@
  
 (defonce init-state 
   (atom {:view :menu
+         :page 0
          :party (l/rtake 4 (cd/random-char-def))
          :game-map m/locations }))
 

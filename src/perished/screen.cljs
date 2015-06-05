@@ -17,7 +17,8 @@
       [:div 
 	[:a {:href "#"} "Exit"]]])
 
-(defmethod view :intro [data bchan]
+(defmulti intro-dispatch (fn [data _] (:page data)))
+(defmethod intro-dispatch 0 [data bchan]
   [:div
    [:h1 "Introduction"]
    [:h2 (gentry 0)]
@@ -27,4 +28,8 @@
    [:h2 (gentry 2)]
    [:p "Impossibility of measurement? Come here, I have my measuring tape. I wager 20 pieces that I can measure your height without changing how tall you are."]
    [:h2 (gentry 3)]
-   [:p "Seems like a losing wager to me. When I was a child, every time my mother measured me, I had grown! When I became an adult, I left the house, and made sure never to measure myself. I was never fond of buying new clothes."]])
+   [:p "Seems like a losing wager to me. When I was a child, every time my mother measured me, I had grown! When I became an adult, I left the house, and made sure never to measure myself. I was never fond of buying new clothes."]
+   [:a {:href "#" :on-click #(put! bchan :continue)} "Continue"]])
+
+(defmethod view :intro [data bchan]
+  (intro-dispatch data bchan))
