@@ -1,17 +1,25 @@
 (ns perished.core
   (:require [reagent.core :as reagent :refer [atom]]
             [perished.lib :as l :include-macros true]
-            [perished.screen :as s] 
             [perished.map :as m]
             [perished.character-defs :as cd]
-            [perished.game :as g :include-macros true]))
+
+            [perished.screen :as s]
+            [perished.screen.menu]
+            [perished.screen.intro]
+            [perished.screen.battle]
+
+            [perished.game :as g :include-macros true]
+            [perished.game.menu]
+            [perished.game.intro]
+            [perished.screen.battle]))
 
 (enable-console-print!) 
  
-(defonce init-state 
-  (atom {:view :menu
-         :page 0
+(defonce state 
+  (atom {:game-state :menu
+         :page-state nil
          :party (l/rtake 4 (cd/random-char-def))
          :game-map m/locations }))
 
-(g/defgame perished init-state g/game s/view)
+(g/defgame perished state g/game s/view)
