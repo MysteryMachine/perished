@@ -4,4 +4,4 @@
             [perished.screen]))
 
 (defmethod perished.screen.view :battle [data bchan]
-  [:div "Battle!"])
+  [:div (str (-> data :page-state :screen-size))])

@@ -10,8 +10,8 @@
                           (jamesmacaulay.zelkova.signal/input identity 
                                                               ::button 
                                                               button-chan#)
-                          jamesmacaulay.zelkova.window/dimensions
-                          time-deltas#)
+                          time-deltas#
+                          jamesmacaulay.zelkova.window/dimensions)
                         (jamesmacaulay.zelkova.signal/sample-on time-deltas#))]
            (jamesmacaulay.zelkova.signal/reductions ~game-fn @~app-atom inputs#))]
      (jamesmacaulay.zelkova.signal/pipe-to-atom app-signal# ~app-atom)

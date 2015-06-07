@@ -13,7 +13,7 @@
             [perished.game :as g :include-macros true]
             [perished.game.menu]
             [perished.game.intro]
-            [perished.screen.battle]))
+            [perished.game.battle]))
 
 (enable-console-print!) 
  
