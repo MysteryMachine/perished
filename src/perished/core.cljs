@@ -1,5 +1,6 @@
 (ns perished.core
-  (:require [reagent.core :as reagent :refer [atom]]
+  (:require [jamesmacaulay.zelkova.window]
+            [reagent.core :as reagent :refer [atom]]
             [perished.lib :as l :include-macros true]
             [perished.map :as m]
             [perished.character-defs :as cd]
