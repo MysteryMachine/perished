@@ -16,7 +16,7 @@
             [perished.game.battle]))
 
 (enable-console-print!) 
- 
+
 (defonce state 
   (atom {:game-state :menu
          :page-state nil
