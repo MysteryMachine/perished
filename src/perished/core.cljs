@@ -19,7 +19,7 @@
 
 (defonce state 
   (atom {:game-state :menu
-         :page-state nil
+         :page-state { :name :start-menu }
          :party (l/rtake 4 (cd/random-char-def))
          :game-map m/locations }))
 

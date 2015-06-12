@@ -7,4 +7,9 @@
 (defn game-dispatch [state _] (:game-state state))
 (defmulti game game-dispatch)
 (defmethod game :default [state _]
-  state)
+  state) 
+
+(defn default [state [button fps screen]]
+  (-> state 
+      (assoc :window-width (first screen))
+      (assoc :fps fps)))
