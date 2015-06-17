@@ -6,9 +6,9 @@
 (defmulti menu menu-dispatch)
 
 (defmethod menu :start-menu [state [button & _]]
-  (cond (= button :new-game) (transition :intro state [])
+  (cond (= button :new-game) (transition :cutscene state :intro)
         :else state))
 
-(defmethod perished.game.game :menu [state inputs] 
+(defmethod g/game :menu [state inputs] 
   (menu (g/default state inputs) inputs))  
  

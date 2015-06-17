@@ -1,11 +1,12 @@
-(ns perished.screen.intro
+(ns perished.screen.cutscene
   (:require [cljs.core.async :as async
              :refer [put!]]
             [perished.screen]
             [perished.screen.helpers :refer [gentry]]))
 
-(defmulti intro (fn [data _] (:page-state data)))
-(defmethod intro 0 [data bchan]
+
+(defmulti cutscene (fn [data _] (-> data :page-state :name)))
+(defmethod cutscene :intro [data bchan]
   [:div
    [:h1 "Introduction"]
    [:h2 (gentry 0)]
@@ -18,5 +19,5 @@
    [:p "Seems like a losing wager to me. When I was a child, every time my mother measured me, I had grown! When I became an adult, I left the house, and made sure never to measure myself. I was never fond of buying new clothes."]
    [:a {:href "#" :on-click #(put! bchan :fight)} "Continue"]])
 
-(defmethod perished.screen.view :intro [data bchan]
-  (intro data bchan))
+(defmethod perished.screen.view :cutscene [state bchan]
+  (cutscene state bchan))

@@ -7,12 +7,12 @@
 
             [perished.screen :as s]
             [perished.screen.menu]
-            [perished.screen.intro]
+            [perished.screen.cutscene]
             [perished.screen.battle]
 
             [perished.game :as g :include-macros true]
             [perished.game.menu]
-            [perished.game.intro]
+            [perished.game.cutscene]
             [perished.game.battle]))
 
 (enable-console-print!) 

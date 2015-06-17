@@ -5,7 +5,7 @@
 (defmulti setup setup-dispatch)
 (defmethod setup :default [& args] (println "setup dispatch failure"))
 
-(defmethod setup :intro [_ state args & _] 0)
+(defmethod setup :cutscene [_ state page-name & _] {:name page-name})
 (defmethod setup :battle [_ state enemies & _]
   (new-battle state enemies))
 
