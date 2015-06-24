@@ -1,14 +1,7 @@
 (ns perished.character-defs
   (:require [perished.character :as c
-             :refer [Class SkillSet CharDef]]))
-
-(def lithographer 
-  (Class. 
-    "Lithographer"
-    (SkillSet. [] 
-               [])
-    (SkillSet. [] 
-               [])))
+             :refer [Class SkillSet CharDef]]
+            [perished.character-defs.lithographer :refer [lithographer]]))
 
 (def classes 
   [lithographer])

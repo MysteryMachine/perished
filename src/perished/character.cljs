@@ -1,5 +1,8 @@
 (ns perished.character)
 
+(defrecord Skill
+  [name description tags 
+   target priority function])
 (defrecord SkillSet  
   [passive-skills active-skills])
 (defrecord Class     
