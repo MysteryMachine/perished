@@ -7,7 +7,7 @@
 
 (defn battle-dispatch [state & _] (-> state :page-state :state))
 (defmulti battle battle-dispatch)
-(defmethod battle [:input 1] [state [button & _]]
+(defmethod battle :input [state [button & _]]
   (handle-input button state))
 
 (defmethod perished.game.game :battle [state [button _ screen-size :as inputs]]

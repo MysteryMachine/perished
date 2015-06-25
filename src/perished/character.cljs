@@ -4,7 +4,7 @@
   [name description tags 
    target priority function])
 (defrecord SkillSet  
-  [passive-skills active-skills])
+  [active-skills passive-skills])
 (defrecord Class     
   [name major-skills minor-skills])
 (defrecord CharDef   
@@ -42,7 +42,7 @@
 
 (defn max-health [c]
   "Returns the max of a CharDef or Character using its passives"
-  (reduce #(%2 :max-health %1) 0 (passives c)))
+  (reduce #(+ %1 (get %2 :max-health)) 0 (passives c)))
 
 (defn new-character [char-def] 
   "Creates a new Character from a CharDef"

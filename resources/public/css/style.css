@@ -40,3 +40,41 @@ h1{
   height: 100%;
   width: 100%;
 }
+
+.battle-menu{
+  background-color: #964;
+  font-weight: bold;
+  color: white;
+  border-width: 5px;
+  border-color: #432;
+  border-style: solid;
+  width: 20%;
+}
+
+.battle-menu ul{
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.battle-menu li{
+  border-width: 0 0 1px 0;
+  border-color: #88603a;
+  border-style: solid;
+  margin: 0 6px;
+}
+
+.battle-menu li > .inner{
+  text-align: left;
+  margin: 4px 0;
+  padding: 0 4px;
+}
+
+.battle-menu li:last-of-type{
+  border-style: none;
+  margin-bottom: 0;
+}
+
+.battle-menu li:hover > .inner{
+  background-color: #a87045;
+}
