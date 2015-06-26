@@ -6,7 +6,7 @@
 (defmulti cutscene cutscene-dispatch)
 
 (defmethod cutscene :intro [state [button & _]]
-  (cond (= button :fight) (transition :battle state [])
+  (cond (= button :fight) (transition :battle state (:party state))
         :else state))
 
 (defmethod g/game :cutscene [state inputs]

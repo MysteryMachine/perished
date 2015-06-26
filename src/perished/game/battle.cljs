@@ -1,5 +1,5 @@
 (ns perished.game.battle
-  (:require [perished.game]))
+  (:require [perished.game :as g]))
 
 (defn input-dispatch [button _] button)
 (defmulti handle-input input-dispatch)
@@ -10,6 +10,5 @@
 (defmethod battle :input [state [button & _]]
   (handle-input button state))
 
-(defmethod perished.game.game :battle [state [button _ screen-size :as inputs]]
-  (-> (battle state inputs)
-      (assoc-in [:page-state :screen-size] screen-size)))
+(defmethod g/game :battle [state [button _ screen-size :as inputs]]
+  (battle (g/default state inputs) inputs))

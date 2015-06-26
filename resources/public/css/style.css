@@ -41,14 +41,19 @@ h1{
   width: 100%;
 }
 
-.battle-menu{
+.battle-menu, .desc-menu{
   background-color: #964;
   font-weight: bold;
   color: white;
   border-width: 5px;
   border-color: #432;
   border-style: solid;
-  width: 20%;
+}
+
+.battle-menu{
+   width: 20%;
+   max-width: 400px;
+   min-width: 200px;
 }
 
 .battle-menu ul{
@@ -77,4 +82,22 @@ h1{
 
 .battle-menu li:hover > .inner{
   background-color: #a87045;
+}
+
+.desc-menu{
+  width: 95%;
+}
+
+.character{
+  height: 35%;
+  width: 10%;
+  z-index: -5;
+}
+
+.party .character{
+  background-color: green;
+}
+
+.enemies .character{
+  background-color: red;
 }
