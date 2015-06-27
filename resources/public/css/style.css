@@ -88,9 +88,11 @@ h1{
   width: 95%;
 }
 
+.characters, .enemies, .party{
+  height: 100%;
+}
+
 .character{
-  height: 35%;
-  width: 10%;
   z-index: -5;
 }
 

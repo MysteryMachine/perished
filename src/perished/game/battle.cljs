@@ -10,5 +10,14 @@
 (defmethod battle :input [state [button & _]]
   (handle-input button state))
 
-(defmethod g/game :battle [state [button _ screen-size :as inputs]]
-  (battle (g/default state inputs) inputs))
+(def hover-search [:page-state :hover])
+(defn handle [state input]
+  (if (= :none input)
+    (assoc-in state hover-search false)
+    (assoc-in state hover-search input)))
+
+(defmethod g/game :battle [state [input _ screen-size :as inputs]]
+  (battle (-> state 
+              (g/default inputs)
+              (handle input)) 
+          inputs))

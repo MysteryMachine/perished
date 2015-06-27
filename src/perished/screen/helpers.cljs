@@ -3,9 +3,11 @@
 (def gentry ["Dana" "Sage" "Sam" "Addison"])
 
 (def standard-res {:w 1920 :h 1080})
+(defn convert-height [width] (* (/ (:h standard-res) (:w standard-res))
+                                width))
 
 (def affix-locs {:top-left [1 1]
-                 :top [0 1]
+                 :top [0 1] 
                  :top-right [-1 1]
                  :left [1 0]
                  :center [0 0]
