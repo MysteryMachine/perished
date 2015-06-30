@@ -6,7 +6,7 @@
             [perished.screen]))
 
 (defn highlight? [state] 
-  (-> state :page-state :hover))
+  (-> state :page-state :input-state :hover))
 
 (defn make-lay-fn [target affixer w h]
   (let [mult (if (= target :party) -1 1)] 
@@ -49,15 +49,15 @@
                             (fn [i sk] 
                               [:li 
                                {:key i
-                                :on-mouse-over (fn [] (put! bchan [:highlight i]))
-                                :on-mouse-out (fn [] (put! bchan :none))} 
+                                :on-mouse-over (fn [] (put! bchan [:hover i]))
+                                :on-mouse-out (fn [] (put! bchan [:hover nil]))} 
                                [:div.inner (:name sk)] ]) 
                             skills)]]]]
         final (if (highlight? state)
                 (conj skill-menu 
                       [:div.desc-menu 
                        {:style (affixer {} :bottom 0 0.01)} 
-                       (:description (get skills (-> pgstate :hover second)))])
+                       (:description (get skills (-> pgstate :input-state :hover)))])
                 skill-menu)]
     final))
 

@@ -7,9 +7,16 @@
                inputs# (->> 
                         (jamesmacaulay.zelkova.signal/map 
                           vector
-                          (jamesmacaulay.zelkova.signal/input identity 
-                                                              ::button 
-                                                              button-chan#)
+                          (jamesmacaulay.zelkova.signal/merge
+                           (jamesmacaulay.zelkova.signal/drop-repeats
+                            (jamesmacaulay.zelkova.signal/sample-on 
+                             time-deltas# 
+                             (jamesmacaulay.zelkova.signal/input :none
+                                                                 identity
+                                                                 button-chan#)))
+                           (jamesmacaulay.zelkova.signal/sample-on 
+                            time-deltas# 
+                            (jamesmacaulay.zelkova.signal/constant :none)))
                           time-deltas#
                           jamesmacaulay.zelkova.window/dimensions)
                         (jamesmacaulay.zelkova.signal/sample-on time-deltas#))]
