@@ -8,18 +8,31 @@
 (defn highlight? [state] 
   (-> state :page-state :input-state :hover))
 
+(def party-height 0.75)
+(def party-width 0.18)
 (defn make-lay-fn [target affixer w h]
   (let [mult (if (= target :party) -1 1)] 
     (fn [index character]
       [:div.character
        {:key index 
-        :style (affixer {:height (* 0.7  h) :width (* .18 w)} 
+        :style (affixer {:height (* party-height  h) :width (* party-width w)} 
                         :bottom 
                         (* mult (+ 0.07 (* index 0.12))) 
-                        0)}])))
+                        0.075)}])))
+
+(defn char-index [pgstate]
+  (-> pgstate :input-state :character))
 
 (defn active-character [state]  (let [pgstate (:page-state state)] 
-    (get (:party pgstate) (-> pgstate :input-state :character))))
+    (get (:party pgstate) (char-index pgstate))))
+
+(defn selector [pgstate w h affixer]
+  [:div.selector {:style (affixer {:height (* 0.05 w)
+                                   :width (* 0.05 w)}
+                                  :top
+                                  (+ -0.070
+                                     (* (char-index pgstate) -0.12))
+                                  0.1)}])
 
 (defn characters [state bchan affixer]
   (let [pgstate (:page-state state)
@@ -31,6 +44,7 @@
         lay-party (make-lay-fn :party affixer w h)
         lay-enemies (make-lay-fn :enemies affixer w h)]
     [:div.characters (affixer {} :top-left 0 0)
+     (selector pgstate w h affixer)
      [:div.party
       (map-indexed lay-party party)]
      [:div.enemies

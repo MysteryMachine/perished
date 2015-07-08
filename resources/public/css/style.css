@@ -88,9 +88,6 @@ h1{
   width: 95%;
 }
 
-.characters, .enemies, .party{
-  height: 100%;
-}
 
 .character{
   z-index: -5;
@@ -102,4 +99,8 @@ h1{
 
 .enemies .character{
   background-color: red;
+}
+
+.selector{
+  background-color: yellow;
 }
