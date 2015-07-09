@@ -28,17 +28,19 @@
   "Given a CharDef or a Character,returns a collection of
    all active skills associated with that character.
    c -> a CharDef or Character"
-  (flatten [(-> c major-skillset :active-skills ) 
-            (-> c minor-skillset :active-skills)]))
+  (vec
+   (flatten [(-> c major-skillset :active-skills ) 
+             (-> c minor-skillset :active-skills)])))
 (defn passives [c] 
   "Given a CharDef or Character, returns a collection of
    all passive skills associated with that character
    c -> a CharDef or Character"
-  (flatten [(-> c major-skillset :passive-skills) 
-            (-> c minor-skillset :passive-skills)
-            (if (= Character (type c)) 
-                (:statuses c)
-                [])]))
+  (vec
+   (flatten [(-> c major-skillset :passive-skills) 
+             (-> c minor-skillset :passive-skills)
+             (if (= Character (type c)) 
+               (:statuses c)
+               [])])))
 
 (defn max-health [c]
   "Returns the max of a CharDef or Character using its passives"

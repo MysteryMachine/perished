@@ -8,4 +8,5 @@
      :input-state {:character 0
                    :menu :root}
      :party (vec party)
-     :enemies (vec enemies)}))
+     :enemies (vec enemies)
+     :selected-skills {}}))

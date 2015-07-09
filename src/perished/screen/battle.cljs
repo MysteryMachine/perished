@@ -64,7 +64,8 @@
                               [:li 
                                {:key i
                                 :on-mouse-over (fn [] (put! bchan [:hover i]))
-                                :on-mouse-out (fn [] (put! bchan [:hover nil]))} 
+                                :on-mouse-out (fn [] (put! bchan [:hover nil]))
+                                :on-click (fn [] (put! bchan [:select-skill i]))} 
                                [:div.inner (:name sk)] ]) 
                             skills)]]]]
         final (if (highlight? state)
