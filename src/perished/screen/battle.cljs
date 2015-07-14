@@ -9,13 +9,13 @@
   (-> state :page-state :input-state :hover))
 
 (def party-height 0.75)
-(def party-width 0.18)
+(def party-width 0.09)
 (defn make-lay-fn [target affixer w h]
   (let [mult (if (= target :party) -1 1)] 
     (fn [index character]
       [:div.character
        {:key index 
-        :style (affixer {:height (* party-height  h) :width (* party-width w)} 
+        :style (affixer {:height (* party-height h) :width (* party-width w)} 
                         :bottom 
                         (* mult (+ 0.07 (* index 0.12))) 
                         0.075)}])))
@@ -23,7 +23,8 @@
 (defn char-index [pgstate]
   (-> pgstate :input-state :character))
 
-(defn active-character [state]  (let [pgstate (:page-state state)] 
+(defn active-character [state]  
+  (let [pgstate (:page-state state)] 
     (get (:party pgstate) (char-index pgstate))))
 
 (defn selector [pgstate w h affixer]
@@ -39,12 +40,11 @@
         active-char (active-character state)
         party (:party pgstate)
         enemies (:enemies pgstate)
-        w (:window-height state)
+        w (:window-width state)
         h (:window-height state)
         lay-party (make-lay-fn :party affixer w h)
         lay-enemies (make-lay-fn :enemies affixer w h)]
     [:div.characters (affixer {} :top-left 0 0)
-     (selector pgstate w h affixer)
      [:div.party
       (map-indexed lay-party party)]
      [:div.enemies
@@ -74,12 +74,17 @@
                        {:style (affixer {} :bottom 0 0.01)} 
                        (:description (get skills (-> pgstate :input-state :hover)))])
                 skill-menu)]
-    final))
+    (conj final (selector pgstate (:window-width state) (:window-height state) affixer))))
 
+(defmethod menus :target [state bchan affixer]
+  [:div {:on-click (fn [] (put! bchan [:select-target 0]))} "click here"])
+
+(defn battle-style [state]
+  {:style {:height (:window-height state)}})
 (defn battle-dispatch [state _ _] (-> state :page-state :state))
 (defmulti battle battle-dispatch)
 (defmethod battle :input [state bchan affixer]
-  [:div.battle {:style {:height (:window-height state)}}
+  [:div.battle (battle-style state)
    (menus state bchan affixer)
    (characters state bchan affixer)])
 

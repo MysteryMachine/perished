@@ -6,13 +6,13 @@
   (Skill. "Press" 
           "Physical. Deals 1 damage to enemy party." 
           [:damage :physical :active] 
-          [:enemies] 0
+          :enemies 0
           (fn [] nil)))
 (def block 
   (Skill. "Block" 
           "+3 priority. Takes first phsycial attack executed by an enemy unit. Reduces that damage by 1, to a minimum of 0."
           [:damage :physical :active] 
-          [:self] 3
+          :self 3
           (fn [] nil)))
 (def stone-defense 
   (Skill. "Stone Defense" 
@@ -30,13 +30,13 @@
   (Skill. "Coat Weapon" 
           "Adds [Poison Brand] to self." 
           [:active :buff]
-          [:self] 0
+          :self 0
           (fn [] nil)))
 (def solvent 
   (Skill. "Solvent" 
           "Removes [Poison] from target. If [Poison] is remove, heal the target by 1 HP." 
           [:active :debuff]
-          [:ally] 0
+          :ally 0
           (fn [] nil)))
 (def printers-apron 
   (Skill. "Printer's Apron" 
