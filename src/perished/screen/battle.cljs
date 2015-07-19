@@ -3,85 +3,85 @@
              :refer [put!]]
             [perished.screen.helpers :as h]
             [perished.character :as c] 
+            [perished.battle :as b]
             [perished.screen]))
 
-(defn highlight? [state] 
-  (-> state :page-state :input-state :hover))
+(def char-height 0.75)
+(def char-width 0.09)
+(def char-x-offset 0.07)
+(def char-y-offset 0.075)
+(def char-separator 0.12)
+(def selector-size 0.025)
+(def selector-y-offset 0.1)
+(def skill-x-offset 0.01)
+(def skill-y-offset 0.025)
+(def desc-y-offset 0.01)
 
-(def party-height 0.75)
-(def party-width 0.09)
-(defn make-lay-fn [target affixer w h]
+(defn highlight? [state] (b/hover-> state))
+
+(defn char-fixer [target affixer w h]
   (let [mult (if (= target :party) -1 1)] 
     (fn [index character]
       [:div.character
        {:key index 
-        :style (affixer {:height (* party-height h) :width (* party-width w)} 
-                        :bottom 
-                        (* mult (+ 0.07 (* index 0.12))) 
-                        0.075)}])))
+        :style (affixer 
+                {:height (* char-height h) :width (* char-width w)} 
+                :bottom 
+                (* mult (+ char-x-offset (* index char-separator))) 
+                char-y-offset)}])))
 
-(defn char-index [pgstate]
-  (-> pgstate :input-state :character))
-
-(defn active-character [state]  
-  (let [pgstate (:page-state state)] 
-    (get (:party pgstate) (char-index pgstate))))
-
-(defn selector [pgstate w h affixer]
-  [:div.selector {:style (affixer {:height (* 0.05 w)
-                                   :width (* 0.05 w)}
-                                  :top
-                                  (+ -0.070
-                                     (* (char-index pgstate) -0.12))
-                                  0.1)}])
+(defn selector [state affixer]
+  (let [w (:window-width state)]
+    [:div.selector 
+     {:style (affixer 
+              {:height (* selector-size w) :width (* selector-size w)}
+              :top
+              (- (* -1 (b/char-num-> state) char-separator) char-x-offset) 
+              selector-y-offset)}]))
 
 (defn characters [state bchan affixer]
-  (let [pgstate (:page-state state)
-        active-char (active-character state)
-        party (:party pgstate)
-        enemies (:enemies pgstate)
-        w (:window-width state)
-        h (:window-height state)
-        lay-party (make-lay-fn :party affixer w h)
-        lay-enemies (make-lay-fn :enemies affixer w h)]
-    [:div.characters (affixer {} :top-left 0 0)
-     [:div.party
-      (map-indexed lay-party party)]
-     [:div.enemies
-      (map-indexed lay-enemies enemies)]]))
+  (let [w (:window-width state) h (:window-height state)]
+   [:div.characters (affixer {} :top-left 0 0)
+    [:div.party 
+     (map-indexed (char-fixer :party affixer w h) (b/party-> state))]
+    [:div.enemies 
+     (map-indexed (char-fixer :enemies affixer w h) (b/enemies-> state))]]))
+
+(defn skill-menu [state bchan affixer]
+  [:div
+   [:div {:style (affixer {} :top-right skill-x-offset skill-y-offset)}
+    [:div.battle-menu
+     [:ul (map-indexed 
+           (fn [i sk] 
+             [:li 
+              {:key i
+               :on-mouse-over (fn [] (put! bchan [:hover i]))
+               :on-mouse-out (fn [] (put! bchan [:hover nil]))
+               :on-click (fn []
+                           (put! bchan [:hover nil])
+                           (put! bchan [:select-skill i]))} 
+              [:div.inner (:name sk)] ]) 
+           (b/active-skills state))]]]]) 
+
+(defn description-menu [state affixer]
+  [:div {:hidden (not (highlight? state))}
+   [:div.desc-menu 
+    {:style (affixer {} :bottom 0 desc-y-offset)} 
+    (:description (b/hover-description state))]])
 
 (defn menus-dispatch [state _ _] (-> state :page-state :input-state :menu))
 (defmulti menus menus-dispatch)
 (defmethod menus :root [state bchan affixer]
-  (let [pgstate (:page-state state) 
-        active-char (active-character state)
-        skills (vec (c/actives active-char))
-        skill-menu [:div
-                    [:div {:style (affixer {} :top-right 0.01 0.025)}
-                     [:div.battle-menu
-                      [:ul (map-indexed 
-                            (fn [i sk] 
-                              [:li 
-                               {:key i
-                                :on-mouse-over (fn [] (put! bchan [:hover i]))
-                                :on-mouse-out (fn [] (put! bchan [:hover nil]))
-                                :on-click (fn [] (put! bchan [:select-skill i]))} 
-                               [:div.inner (:name sk)] ]) 
-                            skills)]]]]
-        final (if (highlight? state)
-                (conj skill-menu 
-                      [:div.desc-menu 
-                       {:style (affixer {} :bottom 0 0.01)} 
-                       (:description (get skills (-> pgstate :input-state :hover)))])
-                skill-menu)]
-    (conj final (selector pgstate (:window-width state) (:window-height state) affixer))))
+  [:div {} 
+   (skill-menu state bchan affixer) 
+   (description-menu state affixer)
+   (selector state affixer)])
 
 (defmethod menus :target [state bchan affixer]
   [:div {:on-click (fn [] (put! bchan [:select-target 0]))} "click here"])
 
-(defn battle-style [state]
-  {:style {:height (:window-height state)}})
-(defn battle-dispatch [state _ _] (-> state :page-state :state))
+(defn battle-style [state] {:style {:height (:window-height state)}})
+(defn battle-dispatch [state _ _] (b/page-state-> state))
 (defmulti battle battle-dispatch)
 (defmethod battle :input [state bchan affixer]
   [:div.battle (battle-style state)
