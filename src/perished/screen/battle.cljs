@@ -19,16 +19,19 @@
 
 (defn highlight? [state] (b/hover-> state))
 
+(defn char-position [target index]
+  (let [mult (if (= target :party) -1 1)]
+    (* mult (+ char-x-offset (* index char-separator))) ))
+
 (defn char-fixer [target affixer w h]
-  (let [mult (if (= target :party) -1 1)] 
-    (fn [index character]
-      [:div.character
-       {:key index 
-        :style (affixer 
-                {:height (* char-height h) :width (* char-width w)} 
-                :bottom 
-                (* mult (+ char-x-offset (* index char-separator))) 
-                char-y-offset)}])))
+  (fn [index character]
+    [:div.character
+     {:key index 
+      :style (affixer 
+              {:height (* char-height h) :width (* char-width w)} 
+              :bottom 
+              (char-position target index)
+              char-y-offset)}]))
 
 (defn selector [state affixer]
   (let [w (:window-width state)]
@@ -36,7 +39,7 @@
      {:style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               :top
-              (- (* -1 (b/char-num-> state) char-separator) char-x-offset) 
+              (char-position :party (b/char-num-> state)) 
               selector-y-offset)}]))
 
 (defn characters [state bchan affixer]
