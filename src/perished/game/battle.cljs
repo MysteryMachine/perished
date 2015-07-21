@@ -6,11 +6,10 @@
 
 (defmulti target b/target-dispatch)
 (defmethod target :self [state skill character]
-  (assoc-in state 
+  (assoc-in state
             b/target-data-in 
             {:skill skill
-             :valid-targets [character] 
-             :targetting 0}))
+             :valid-targets {character true} }))
 
 (defmulti handle-input b/input-dispatch)
 (defmethod handle-input :default [_ state] state) 
@@ -22,7 +21,6 @@
   (let [character (b/character-> state)
         skill (get (c/actives character) (second button))]
     (-> state 
-        (set-hover nil)
         (assoc-in b/menu-in :target)
         (target skill character)))) 
 

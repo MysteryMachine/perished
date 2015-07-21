@@ -19,36 +19,48 @@
 
 (defn highlight? [state] (b/hover-> state))
 
-(defn char-position [target index]
+(defn char-x-position [target index]
   (let [mult (if (= target :party) -1 1)]
     (* mult (+ char-x-offset (* index char-separator))) ))
 
-(defn char-fixer [target affixer w h]
-  (fn [index character]
-    [:div.character
-     {:key index 
-      :style (affixer 
-              {:height (* char-height h) :width (* char-width w)} 
-              :bottom 
-              (char-position target index)
-              char-y-offset)}]))
-
-(defn selector [state affixer]
+(defn selector [state affixer & [hidden]]
   (let [w (:window-width state)]
-    [:div.selector 
-     {:style (affixer 
+    [:div.selector
+     {:hidden hidden
+      :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               :top
-              (char-position :party (b/char-num-> state)) 
+              (char-x-position :party (b/char-num-> state)) 
               selector-y-offset)}]))
 
+(defn char-fixer [state target affixer]
+  (let [w (:window-width state)
+        h (:window-height state)
+        targetting (= :target (b/menu-> state))
+        valid-targets (if targetting (b/valid-targets-> state))] 
+    (fn [index character]
+      (let [valid-target (and targetting (find valid-targets character))] 
+        [:div
+         {:key index}
+         (if valid-target
+           (selector state affixer valid-target)
+           [:div ""])
+         [:div.character
+          {:key index 
+           :style (affixer 
+                   {:height (* char-height h) :width (* char-width w)} 
+                   :bottom 
+                   (char-x-position target index)
+                   char-y-offset)}]]))))
+
 (defn characters [state bchan affixer]
-  (let [w (:window-width state) h (:window-height state)]
-   [:div.characters (affixer {} :top-left 0 0)
-    [:div.party 
-     (map-indexed (char-fixer :party affixer w h) (b/party-> state))]
-    [:div.enemies 
-     (map-indexed (char-fixer :enemies affixer w h) (b/enemies-> state))]]))
+  [:div.characters (affixer {} :top-left 0 0)
+   [:div.party 
+    (map-indexed (char-fixer state :party affixer) 
+                 (b/party-> state))]
+   [:div.enemies 
+    (map-indexed (char-fixer state :enemies affixer) 
+                 (b/enemies-> state))]])
 
 (defn skill-menu [state bchan affixer]
   [:div
@@ -81,7 +93,11 @@
    (selector state affixer)])
 
 (defmethod menus :target [state bchan affixer]
-  [:div {:on-click (fn [] (put! bchan [:select-target 0]))} "click here"])
+  [:div {}
+   [:div.desc-menu 
+    {:style (affixer {} :top 0 desc-y-offset)}
+    "Select A Target"]
+   (description-menu state affixer)])
 
 (defn battle-style [state] {:style {:height (:window-height state)}})
 (defn battle-dispatch [state _ _] (b/page-state-> state))
