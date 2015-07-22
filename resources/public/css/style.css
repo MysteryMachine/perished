@@ -41,6 +41,10 @@ h1{
   width: 100%;
 }
 
+.outer-battle{
+  z-index: 100;
+}
+
 .battle-menu, .desc-menu{
   background-color: #964;
   font-weight: bold;
@@ -48,12 +52,13 @@ h1{
   border-width: 5px;
   border-color: #432;
   border-style: solid;
+  z-index: 100;
 }
 
 .battle-menu{
-   width: 20%;
-   max-width: 400px;
-   min-width: 200px;
+  width: 20%;
+  max-width: 400px;
+  min-width: 200px;
 }
 
 .battle-menu ul{
@@ -88,11 +93,6 @@ h1{
   width: 95%;
 }
 
-
-.character{
-  z-index: -5;
-}
-
 .party .character{
   background-color: green;
 }
@@ -103,4 +103,14 @@ h1{
 
 .selector{
   background-color: yellow;
+}
+
+.selector.clickable:hover,
+.character:hover + .clickable{
+  background-color: blue;
+}
+
+.clickable + .character:hover,
+.clickable{
+  cursor: pointer;
 }

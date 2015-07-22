@@ -23,9 +23,12 @@
   (let [mult (if (= target :party) -1 1)]
     (* mult (+ char-x-offset (* index char-separator))) ))
 
-(defn selector [state affixer index & [hidden]]
-  (let [w (:window-width state)]
-    [:div.selector
+(defn selector [state affixer index & [clickable active hidden]]
+  (let [w (:window-width state)
+        div (str "div.selector" 
+                 (if clickable ".clickable")
+                 (if active ".active" ""))]
+    [(keyword div)
      {:hidden hidden
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
@@ -40,18 +43,19 @@
         valid-targets (if targetting (b/valid-targets-> state))] 
     (fn [index character]
       (let [valid-target (and targetting (valid-targets character))] 
-        [:div
+        [:div.char-container
          {:key index}
-         (if valid-target
-           (selector state affixer index valid-target)
-           [:div ""])
+         (if valid-target [:div.clickable ""])
          [:div.character
           {:key index 
            :style (affixer 
                    {:height (* char-height h) :width (* char-width w)} 
                    :bottom 
                    (char-x-position target index)
-                   char-y-offset)}]]))))
+                   char-y-offset)}]
+         (if valid-target
+           (selector state affixer index true false valid-target)
+           [:div ""])]))))
 
 (defn characters [state bchan affixer]
   [:div.characters (affixer {} :top-left 0 0)
@@ -63,20 +67,20 @@
                  (b/enemies-> state))]])
 
 (defn skill-menu [state bchan affixer]
-  [:div
-   [:div {:style (affixer {} :top-right skill-x-offset skill-y-offset)}
-    [:div.battle-menu
-     [:ul (map-indexed 
-           (fn [i sk] 
-             [:li 
-              {:key i
-               :on-mouse-over (fn [] (put! bchan [:hover i]))
-               :on-mouse-out (fn [] (put! bchan [:hover nil]))
-               :on-click (fn []
-                           (put! bchan [:hover nil])
-                           (put! bchan [:select-skill i]))} 
-              [:div.inner (:name sk)] ]) 
-           (b/active-skills state))]]]]) 
+  [:div.outer-battle 
+   {:style (affixer {} :top-right skill-x-offset skill-y-offset)}
+   [:div.battle-menu
+    [:ul (map-indexed 
+          (fn [i sk] 
+            [:li 
+             {:key i
+              :on-mouse-over (fn [] (put! bchan [:hover i]))
+              :on-mouse-out (fn [] (put! bchan [:hover nil]))
+              :on-click (fn []
+                          (put! bchan [:hover nil])
+                          (put! bchan [:select-skill i]))} 
+             [:div.inner (:name sk)] ]) 
+          (b/active-skills state))]]]) 
 
 (defn description-menu [state affixer]
   [:div {:hidden (not (highlight? state))}

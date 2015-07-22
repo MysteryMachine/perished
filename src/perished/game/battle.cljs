@@ -16,6 +16,17 @@
   (assoc-in state
             b/target-data-in
             {:skill skill
+             :multi false
+             :valid-targets 
+             (reduce (fn [tmap char] (assoc tmap char true))
+                     {}
+                     (b/party-> state))}))
+
+(defmethod target :allies [state skill character]
+  (assoc-in state
+            b/target-data-in
+            {:skill skill
+             :multi true
              :valid-targets 
              (reduce (fn [tmap char] (assoc tmap char true))
                      {}
