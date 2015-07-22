@@ -23,14 +23,14 @@
   (let [mult (if (= target :party) -1 1)]
     (* mult (+ char-x-offset (* index char-separator))) ))
 
-(defn selector [state affixer & [hidden]]
+(defn selector [state affixer index & [hidden]]
   (let [w (:window-width state)]
     [:div.selector
      {:hidden hidden
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               :top
-              (char-x-position :party (b/char-num-> state)) 
+              (char-x-position :party index) 
               selector-y-offset)}]))
 
 (defn char-fixer [state target affixer]
@@ -39,11 +39,11 @@
         targetting (= :target (b/menu-> state))
         valid-targets (if targetting (b/valid-targets-> state))] 
     (fn [index character]
-      (let [valid-target (and targetting (find valid-targets character))] 
+      (let [valid-target (and targetting (valid-targets character))] 
         [:div
          {:key index}
          (if valid-target
-           (selector state affixer valid-target)
+           (selector state affixer index valid-target)
            [:div ""])
          [:div.character
           {:key index 
@@ -90,7 +90,7 @@
   [:div {} 
    (skill-menu state bchan affixer) 
    (description-menu state affixer)
-   (selector state affixer)])
+   (selector state affixer (b/char-num-> state))])
 
 (defmethod menus :target [state bchan affixer]
   [:div {}

@@ -10,7 +10,7 @@
 (defrecord CharDef   
   [major-class minor-class])
 (defrecord Character 
-  [char-def health statuses])
+  [char-def health statuses id])
 
 (defmulti  minor-skillset 
  "Given a Character or CharDef, returns the minor SkillSet of its minor Class"
@@ -46,6 +46,10 @@
   "Returns the max of a CharDef or Character using its passives"
   (reduce #(+ %1 (get %2 :max-health)) 0 (passives c)))
 
+(defonce new-id 
+  (let [counter (atom 0)]
+    (fn [] (swap! counter inc))))
+
 (defn new-character [char-def] 
   "Creates a new Character from a CharDef"
-  (Character. char-def (max-health char-def) []))
+  (Character. char-def (max-health char-def) [] (new-id)))

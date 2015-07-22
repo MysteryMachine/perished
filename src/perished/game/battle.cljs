@@ -5,11 +5,21 @@
             [perished.battle :as b]))
 
 (defmulti target b/target-dispatch)
+
 (defmethod target :self [state skill character]
   (assoc-in state
             b/target-data-in 
             {:skill skill
              :valid-targets {character true} }))
+
+(defmethod target :ally [state skill character]
+  (assoc-in state
+            b/target-data-in
+            {:skill skill
+             :valid-targets 
+             (reduce (fn [tmap char] (assoc tmap char true))
+                     {}
+                     (b/party-> state))}))
 
 (defmulti handle-input b/input-dispatch)
 (defmethod handle-input :default [_ state] state) 
