@@ -7,7 +7,7 @@
 
 (defmulti cutscene (fn [data _] (-> data :page-state :name)))
 (defmethod cutscene :intro [data bchan]
-  [:div
+  [:div.game
    [:h1 "Introduction"]
    [:h2 (gentry 0)]
    [:p "You see, comrades, a flip of the coin is very deterministic. If one knows all the munute details involving the affair, using the laws of physics, one could very easily untangle the web. And, for that matter, a spider's web, can also be calculated. My friend says she knows a gentleman called Laplace that can do it rather trivially."]

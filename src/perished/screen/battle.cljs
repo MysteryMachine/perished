@@ -107,9 +107,10 @@
 (defn battle-dispatch [state _ _] (b/page-state-> state))
 (defmulti battle battle-dispatch)
 (defmethod battle :input [state bchan affixer]
-  [:div.battle (battle-style state)
-   (menus state bchan affixer)
-   (characters state bchan affixer)])
+  [:div.game
+   [:div.battle (battle-style state)
+    (menus state bchan affixer)
+    (characters state bchan affixer)]])
 
 (defmethod perished.screen.view :battle [state bchan]
   (let [affixer (h/affix-fn (:window-width state))] 

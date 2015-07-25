@@ -9,7 +9,7 @@
 
 (defmethod menu :start-menu [state bchan]
   (let [affixer (h/affix-fn (:window-width state))]
-    [:div {:style (affixer { :width "400px" } :center 0 0)}
+    [:div.game {:style (affixer { :width "400px" } :center 0 0)}
      [:h1 "Your Party Has Perished"]
      [:div 
       [:a {:href "#" :on-click #(put! bchan :new-game)} "New Game"]]

@@ -6,12 +6,16 @@ html{
 
 body{
   text-align: center;
-  background-color: #222; 
+  background-color: #080808;
   color: #964;
   font-family: "Helvetica";
   line-height: 1.5;
   margin: 0;
   height: 100%;
+}
+
+.game{
+  background-color: #222; 
 }
 
 a, a:visited{
