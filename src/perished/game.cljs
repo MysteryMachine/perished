@@ -4,7 +4,7 @@
             [jamesmacaulay.zelkova.mouse :as mouse]
             [jamesmacaulay.zelkova.keyboard :as keyboard]
             [jamesmacaulay.zelkova.time :as time]
-						[jamesmacaulay.zelkova.window :as w]
+            [jamesmacaulay.zelkova.window :as w]
             [perished.screen.helpers :as s]))
 
 (defn game-dispatch [state _] (:game-state state))
@@ -13,8 +13,7 @@
 
 (defn default [state [button fps screen]]
   (-> state 
-      (assoc :window-height (s/convert-height (first screen)))
-      (assoc :window-width (first screen))
+      (s/scale screen)
       (assoc :fps fps)))
 
 (defn new-game [app-atom game-fn view-fn]
@@ -26,7 +25,7 @@
                           vector
                           (z/merge
                            (z/drop-repeats 
-													 	(z/sample-on dt (z/input :none identity button-chan)))
+                            (z/sample-on dt (z/input :none identity button-chan)))
                            (z/sample-on dt (z/constant :none)))
                           dt
                           w/dimensions)

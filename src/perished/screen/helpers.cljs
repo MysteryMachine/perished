@@ -2,9 +2,8 @@
 
 (def gentry ["Dana" "Sage" "Sam" "Addison"])
 
-(def standard-res {:w 1920 :h 1080})
-(defn convert-height [width] (* (/ (:h standard-res) (:w standard-res))
-                                width))
+(def s-res {:w 1920 :h 1080})
+(def s-scale (/ (:w s-res) (:h s-res)))
 
 (def affix-locs {:top-left [1 1]
                  :top [0 1] 
@@ -31,19 +30,38 @@
 (defmethod calc-affix 0 [_ max val] (+ (* max val) (/ max 2)))
 (defmethod calc-affix 1 [_ max val] (* max val)) 
 
-(defn affix-fn [unscaled-screen-w]
-  (let [screen-w (if (> unscaled-screen-w (:w standard-res))
-                   (:w standard-res)
-                   unscaled-screen-w)
-        scale (/ screen-w (:w standard-res))
-        screen-h (* (:h standard-res) scale)] 
-    (fn [style affix-loc x y]
-      (let [[xl yl :as align] (affix-loc affix-locs)
-            x-fix (calc-affix xl screen-w x)
-            y-fix (calc-affix yl screen-h y)
-            transform (get transforms align)]
-        (merge style {:left x-fix 
-                      :top y-fix 
-                      :transform transform
-                      :display "inline-block"
-                      :position "absolute"})))))
+(defn affixer [style state affix-loc x y]
+  (let [screen-h (:window-height state)
+        screen-w (:window-width state)
+        [xl yl :as align] (affix-loc affix-locs)
+        x-fix (+ (:margin-width state) (calc-affix xl screen-w x))
+        y-fix (+ (:margin-height state) (calc-affix yl screen-h y))
+        transform (get transforms align)]
+    (merge style {:left x-fix 
+                  :top y-fix 
+                  :transform transform
+                  :display "inline-block"
+                  :position "absolute"})))
+
+(defn scale [state [w h]]
+  (let [[w w-extra] (if (> w (:w s-res)) 
+                      [(:w s-res) (- (w (:w s-res)))] 
+                      [w 0])
+        [h h-extra] (if (> h (:h s-res)) 
+                      [(:h s-res) (- (h (:h s-res)))] 
+                      [h 0])
+        s (/ w h)
+        scale-w? (> s s-scale)
+        [w w-extra] (if scale-w?
+                      (let [new-w (* h s-scale)]
+                        [new-w (+ w-extra (- w new-w))])
+                      [w w-extra])
+        [h h-extra] (if-not scale-w?
+                      (let [new-h (/ w s-scale)]
+                        [new-h (+ h-extra (- h new-h))])
+                      [h h-extra])]
+    (-> state
+        (assoc :window-height h)
+        (assoc :window-width w)
+        (assoc :margin-width (/ w-extra 4))
+        (assoc :margin-height (/ h-extra 4)))))

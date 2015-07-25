@@ -1,7 +1,7 @@
 (ns perished.screen.battle
   (:require [cljs.core.async :as async
              :refer [put!]]
-            [perished.screen.helpers :as h]
+            [perished.screen.helpers :as h :refer [affixer]]
             [perished.character :as c] 
             [perished.battle :as b]
             [perished.screen]))
@@ -23,7 +23,7 @@
   (let [mult (if (= target :party) -1 1)]
     (* mult (+ char-x-offset (* index char-separator))) ))
 
-(defn selector [state affixer index & [clickable active hidden]]
+(defn selector [state index & [clickable active hidden]]
   (let [w (:window-width state)
         div (str "div.selector" 
                  (if clickable ".clickable")
@@ -32,11 +32,12 @@
      {:hidden hidden
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
+              state
               :top
               (char-x-position :party index) 
               selector-y-offset)}]))
 
-(defn char-fixer [state target affixer]
+(defn char-fixer [state target]
   (let [w (:window-width state)
         h (:window-height state)
         targetting (= :target (b/menu-> state))
@@ -50,25 +51,26 @@
           {:key index 
            :style (affixer 
                    {:height (* char-height h) :width (* char-width w)} 
+                   state
                    :bottom 
                    (char-x-position target index)
                    char-y-offset)}]
          (if valid-target
-           (selector state affixer index true false valid-target)
+           (selector state index true false valid-target)
            [:div ""])]))))
 
-(defn characters [state bchan affixer]
-  [:div.characters (affixer {} :top-left 0 0)
+(defn characters [state bchan]
+  [:div.characters (affixer {} state :top-left 0 0)
    [:div.party 
-    (map-indexed (char-fixer state :party affixer) 
+    (map-indexed (char-fixer state :party) 
                  (b/party-> state))]
    [:div.enemies 
-    (map-indexed (char-fixer state :enemies affixer) 
+    (map-indexed (char-fixer state :enemies) 
                  (b/enemies-> state))]])
 
-(defn skill-menu [state bchan affixer]
+(defn skill-menu [state bchan]
   [:div.outer-battle 
-   {:style (affixer {} :top-right skill-x-offset skill-y-offset)}
+   {:style (affixer {} state :top-right skill-x-offset skill-y-offset)}
    [:div.battle-menu
     [:ul (map-indexed 
           (fn [i sk] 
@@ -82,36 +84,41 @@
              [:div.inner (:name sk)] ]) 
           (b/active-skills state))]]]) 
 
-(defn description-menu [state affixer]
+(defn description-menu [state]
   [:div {:hidden (not (highlight? state))}
    [:div.desc-menu 
-    {:style (affixer {} :bottom 0 desc-y-offset)} 
+    {:style (affixer {} state :bottom state 0 desc-y-offset)} 
     (:description (b/hover-description state))]])
 
-(defn menus-dispatch [state _ _] (-> state :page-state :input-state :menu))
+(defn menus-dispatch [state _] (-> state :page-state :input-state :menu))
 (defmulti menus menus-dispatch)
-(defmethod menus :root [state bchan affixer]
+(defmethod menus :root [state bchan]
   [:div {} 
-   (skill-menu state bchan affixer) 
-   (description-menu state affixer)
-   (selector state affixer (b/char-num-> state))])
+   (skill-menu state bchan) 
+   (description-menu state)
+   (selector state (b/char-num-> state))])
 
-(defmethod menus :target [state bchan affixer]
+(defmethod menus :target [state bchan]
   [:div {}
    [:div.desc-menu 
-    {:style (affixer {} :top 0 desc-y-offset)}
+    {:style (affixer {} state :top 0 desc-y-offset)}
     "Select A Target"]
-   (description-menu state affixer)])
+   (description-menu state)])
 
-(defn battle-style [state] {:style {:height (:window-height state)}})
-(defn battle-dispatch [state _ _] (b/page-state-> state))
+(defn battle-style [state] 
+  {:style (affixer {:height (:window-height state)}
+                   state
+                   :top-left
+                   0
+                   0)})
+(defn battle-dispatch [state _] (b/page-state-> state))
 (defmulti battle battle-dispatch)
-(defmethod battle :input [state bchan affixer]
+(defmethod battle :input [state bchan]
   [:div.game
-   [:div.battle (battle-style state)
-    (menus state bchan affixer)
-    (characters state bchan affixer)]])
+   [:div.battle 
+    (battle-style state)
+    (menus state bchan)
+    (characters state bchan)]])
 
 (defmethod perished.screen.view :battle [state bchan]
-  (let [affixer (h/affix-fn (:window-width state))] 
-    (battle state bchan affixer)))
+  (battle state bchan))
