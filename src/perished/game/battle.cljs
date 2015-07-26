@@ -45,13 +45,12 @@
         (assoc-in b/menu-in :target)
         (target skill character)))) 
 
-(defmethod handle-input :select-target [_ state]
-  (let [char-num (b/char-num-> state)] 
-    (-> state 
-        (assoc-in b/selected-skills-in
-                  (b/updated-selected-skills state char-num))
-        (assoc-in b/menu-in :root)
-        (assoc-in b/char-num-in (inc char-num)))))
+(defmethod handle-input :select-target [button state]
+  (-> state 
+      (assoc-in b/selected-skills-in
+                (b/updated-selected-skills state (second button)))
+      (assoc-in b/menu-in :root)
+      (assoc-in b/char-num-in (inc (b/char-num-> state)))))
 
 (defmulti battle b/battle-dispatch)
 (defmethod battle :target [state [button & _]] (handle-input button state))

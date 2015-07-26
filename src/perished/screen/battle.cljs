@@ -37,7 +37,7 @@
               (char-x-position :party index) 
               selector-y-offset)}]))
 
-(defn char-fixer [state target]
+(defn char-fixer [state bchan target]
   (let [w (:window-width state)
         h (:window-height state)
         targetting (= :target (b/menu-> state))
@@ -54,7 +54,10 @@
                    state
                    :bottom 
                    (char-x-position target index)
-                   char-y-offset)}]
+                   char-y-offset)
+           :on-click (fn [] 
+                       (if valid-target 
+                         (put! bchan [:select-target index])))}]
          (if valid-target
            (selector state index true false valid-target)
            [:div ""])]))))
@@ -62,10 +65,10 @@
 (defn characters [state bchan]
   [:div.characters (affixer {} state :top-left 0 0)
    [:div.party 
-    (map-indexed (char-fixer state :party) 
+    (map-indexed (char-fixer state bchan :party) 
                  (b/party-> state))]
    [:div.enemies 
-    (map-indexed (char-fixer state :enemies) 
+    (map-indexed (char-fixer state bchan :enemies) 
                  (b/enemies-> state))]])
 
 (defn skill-menu [state bchan]
@@ -87,7 +90,7 @@
 (defn description-menu [state]
   [:div {:hidden (not (highlight? state))}
    [:div.desc-menu 
-    {:style (affixer {} state :bottom state 0 desc-y-offset)} 
+    {:style (affixer {:width (:window-width state)} state :bottom 0 desc-y-offset)} 
     (:description (b/hover-description state))]])
 
 (defn menus-dispatch [state _] (-> state :page-state :input-state :menu))
@@ -101,16 +104,13 @@
 (defmethod menus :target [state bchan]
   [:div {}
    [:div.desc-menu 
-    {:style (affixer {} state :top 0 desc-y-offset)}
+    {:style (affixer {:width (:window-width state)} state :top 0 desc-y-offset)}
     "Select A Target"]
    (description-menu state)])
 
 (defn battle-style [state] 
   {:style (affixer {:height (:window-height state)}
-                   state
-                   :top-left
-                   0
-                   0)})
+                   state :top-left 0 0)})
 (defn battle-dispatch [state _] (b/page-state-> state))
 (defmulti battle battle-dispatch)
 (defmethod battle :input [state bchan]
