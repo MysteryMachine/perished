@@ -16,6 +16,7 @@
 (def skill-x-offset 0.01)
 (def skill-y-offset 0.025)
 (def desc-y-offset 0.01)
+(defn menu-width [state] (* 0.98 (:window-width state)))
 
 (defn highlight? [state] (b/hover-> state))
 
@@ -23,7 +24,7 @@
   (let [mult (if (= target :party) -1 1)]
     (* mult (+ char-x-offset (* index char-separator))) ))
 
-(defn selector [state index & [clickable active hidden]]
+(defn selector [state index target & [clickable active hidden]]
   (let [w (:window-width state)
         div (str "div.selector" 
                  (if clickable ".clickable")
@@ -34,7 +35,7 @@
               {:height (* selector-size w) :width (* selector-size w)}
               state
               :top
-              (char-x-position :party index) 
+              (char-x-position target index) 
               selector-y-offset)}]))
 
 (defn char-fixer [state bchan target]
@@ -59,7 +60,7 @@
                        (if valid-target 
                          (put! bchan [:select-target index])))}]
          (if valid-target
-           (selector state index true false valid-target)
+           (selector state index target true false valid-target)
            [:div ""])]))))
 
 (defn characters [state bchan]
@@ -90,7 +91,7 @@
 (defn description-menu [state]
   [:div {:hidden (not (highlight? state))}
    [:div.desc-menu 
-    {:style (affixer {:width (:window-width state)} state :bottom 0 desc-y-offset)} 
+    {:style (affixer {:width (menu-width state)} state :bottom 0 desc-y-offset)} 
     (:description (b/hover-description state))]])
 
 (defn menus-dispatch [state _] (-> state :page-state :input-state :menu))
@@ -99,12 +100,12 @@
   [:div {} 
    (skill-menu state bchan) 
    (description-menu state)
-   (selector state (b/char-num-> state))])
+   (selector state (b/char-num-> state) :party)])
 
 (defmethod menus :target [state bchan]
   [:div {}
    [:div.desc-menu 
-    {:style (affixer {:width (:window-width state)} state :top 0 desc-y-offset)}
+    {:style (affixer {:width (menu-width state)} state :top 0 desc-y-offset)}
     "Select A Target"]
    (description-menu state)])
 

@@ -6,6 +6,11 @@
 
 (defmulti target b/target-dispatch)
 
+(defn target-map [target-list]
+  (reduce (fn [tmap char] (assoc tmap char true))
+                     {}
+                     target-list))
+
 (defmethod target :self [state skill character]
   (assoc-in state
             b/target-data-in 
@@ -18,19 +23,31 @@
             {:skill skill
              :multi false
              :valid-targets 
-             (reduce (fn [tmap char] (assoc tmap char true))
-                     {}
-                     (b/party-> state))}))
+             (target-map (b/party-> state))}))
 
 (defmethod target :allies [state skill character]
   (assoc-in state
             b/target-data-in
             {:skill skill
              :multi true
-             :valid-targets 
-             (reduce (fn [tmap char] (assoc tmap char true))
-                     {}
-                     (b/party-> state))}))
+             :valid-targets
+             (target-map (b/party-> state))}))
+
+(defmethod target :enemy [state skill character]
+  (assoc-in state
+            b/target-data-in
+            {:skill skill
+             :multi false
+             :valid-targets
+             (target-map (b/enemies-> state))}))
+
+(defmethod target :enemies [state skill character]
+  (assoc-in state
+            b/target-data-in
+            {:skill skill
+             :multi true
+             :valid-targets
+             (target-map (b/enemies-> state))}))
 
 (defmulti handle-input b/input-dispatch)
 (defmethod handle-input :default [_ state] state) 
