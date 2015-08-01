@@ -64,13 +64,15 @@
            [:div ""])]))))
 
 (defn characters [state bchan]
-  [:div.characters (affixer {} state :top-left 0 0)
-   [:div.party 
-    (map-indexed (char-fixer state bchan :party) 
-                 (b/party-> state))]
-   [:div.enemies 
-    (map-indexed (char-fixer state bchan :enemies) 
-                 (b/enemies-> state))]])
+  (let [multi (b/multi-target-> state)]  
+    [(if multi :div.characters.multi :div.characters) 
+     (affixer {} state :top-left 0 0)
+     [:div.party 
+      (map-indexed (char-fixer state bchan :party) 
+                   (b/party-> state))]
+     [:div.enemies 
+      (map-indexed (char-fixer state bchan :enemies) 
+                   (b/enemies-> state))]]))
 
 (defn skill-menu [state bchan]
   [:div.outer-battle 
@@ -103,11 +105,12 @@
    (selector state (b/char-num-> state) :party)])
 
 (defmethod menus :target [state bchan]
-  [:div {}
-   [:div.desc-menu 
-    {:style (affixer {:width (menu-width state)} state :top 0 desc-y-offset)}
-    "Select A Target"]
-   (description-menu state)])
+  (let [multi (b/multi-target-> state)] 
+    [(if multi :div.multi :div) {}
+     [:div.desc-menu 
+      {:style (affixer {:width (menu-width state)} state :top 0 desc-y-offset)}
+      (if multi "Targetting All" "Select A Target")]
+     (description-menu state)]))
 
 (defn battle-style [state] 
   {:style (affixer {:height (:window-height state)}

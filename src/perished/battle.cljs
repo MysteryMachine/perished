@@ -44,7 +44,9 @@
 (defn menu-> [state] (get-in state menu-in))
 (defn page-state-> [state] (get-in state [:page-state :state]))
 (defn valid-targets-> [state]
-  (:valid-targets (get-in state target-data-in)))3
+  (:valid-targets (get-in state target-data-in)))
+(defn multi-target-> [state]
+  (:multi (get-in state target-data-in)))
  
 (defn active-skills [state] (vec (c/actives (active-character-> state))))
 (defn hover-description [state] (get (active-skills state) (hover-> state)))

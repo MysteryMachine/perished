@@ -110,7 +110,8 @@ h1{
 }
 
 .selector.clickable:hover,
-.character:hover + .clickable{
+.character:hover + .clickable,
+.multi .selector{
   background-color: blue;
 }
 

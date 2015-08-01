@@ -65,7 +65,10 @@
 (defmethod handle-input :select-target [button state]
   (-> state 
       (assoc-in b/selected-skills-in
-                (b/updated-selected-skills state (second button)))
+                (b/updated-selected-skills state 
+                                           (if (b/multi-target-> state)
+                                             :multi
+                                             (second button))))
       (assoc-in b/menu-in :root)
       (assoc-in b/char-num-in (inc (b/char-num-> state)))))
 
