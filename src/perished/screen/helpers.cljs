@@ -65,3 +65,5 @@
         (assoc :window-width w)
         (assoc :margin-width (/ w-extra 4))
         (assoc :margin-height (/ h-extra 4)))))
+
+(defn ? [q] (if q "true" "false"))

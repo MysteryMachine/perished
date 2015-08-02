@@ -30,12 +30,12 @@
                  (if clickable ".clickable")
                  (if active ".active" ""))]
     [(keyword div)
-     {:hidden hidden
+     {:hidden (h/? hidden)
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               state
               :top
-              (char-x-position target index) 
+              (char-x-position target index)  
               selector-y-offset)}]))
 
 (defn char-fixer [state bchan target]
@@ -58,11 +58,11 @@
                    char-y-offset)
            :on-click (fn [] 
                        (if valid-target 
-                         (put! bchan [:select-target index])))}]
+                         (put! bchan [:select-target character])))}]
          (if valid-target
            (selector state index target true false valid-target)
            [:div ""])]))))
-
+ 
 (defn characters [state bchan]
   (let [multi (b/multi-target-> state)]  
     [(if multi :div.characters.multi :div.characters) 
@@ -82,11 +82,11 @@
           (fn [i sk] 
             [:li 
              {:key i
-              :on-mouse-over (fn [] (put! bchan [:hover i]))
+              :on-mouse-over (fn [] (put! bchan [:hover sk]))
               :on-mouse-out (fn [] (put! bchan [:hover nil]))
               :on-click (fn []
                           (put! bchan [:hover nil])
-                          (put! bchan [:select-skill i]))} 
+                          (put! bchan [:select-skill sk]))} 
              [:div.inner (:name sk)] ]) 
           (b/active-skills state))]]]) 
 
@@ -94,7 +94,7 @@
   [:div {:hidden (not (highlight? state))}
    [:div.desc-menu 
     {:style (affixer {:width (menu-width state)} state :bottom 0 desc-y-offset)} 
-    (:description (b/hover-description state))]])
+    (:description (b/hover-> state))]])
 
 (defn menus-dispatch [state _] (-> state :page-state :input-state :menu))
 (defmulti menus menus-dispatch)
@@ -102,7 +102,7 @@
   [:div {} 
    (skill-menu state bchan) 
    (description-menu state)
-   (selector state (b/char-num-> state) :party)])
+   (selector state (b/char-num-> state) :party)]) 
 
 (defmethod menus :target [state bchan]
   (let [multi (b/multi-target-> state)] 
