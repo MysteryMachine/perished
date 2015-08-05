@@ -5,46 +5,45 @@
 (def press 
   (Skill. "Press" 
           "Physical. Deals 1 damage to enemy party." 
-          [:damage :physical :active] 
+          [:damage/physical] 
           :enemies 0
-          (fn [] nil)))
+          identity))
 (def block 
   (Skill. "Block" 
           "+3 priority. Takes first phsycial attack executed by an enemy unit. Reduces that damage by 1, to a minimum of 0."
-          [:damage :physical :active] 
+          [:damage/physical] 
           :self 3
-          (fn [] nil)))
+          identity))
 (def stone-defense 
   (Skill. "Stone Defense" 
           "Reduces any incoming physical damage by 2 points, to a minimum of 1."
-          [:passive]
-          [:damage :physical] 0
-          (fn [] nil)))
+          [:before :damage/physical]
+          :passive 0
+          identity))
 (def industrial-process 
   (Skill. "Industrial Process" 
           "Deal 1 extra physical damage when attacking with the same physical attack consecutively."
-          [:passive]
-          [:move :physical :repetition] 0
-          (fn [] nil)))
+          [:after :attack :repeated]
+          :passive 0
+          identity))
 (def coat-weapon 
   (Skill. "Coat Weapon" 
           "Adds [Poison Brand] to self." 
-          [:active :buff]
+          [:buff]
           :self 0
-          (fn [] nil)))
+          identity))
 (def solvent 
   (Skill. "Solvent" 
-          "Removes [Poison] from target. If [Poison] is remove, heal the target by 1 HP." 
-          [:active :debuff]
+          "Removes [Poison] from target. If [Poison] is removed, heal the target by 1 HP." 
+          [:debuff :status/poison :heal]
           :ally 0
-          (fn [] nil)))
+          identity))
 (def printers-apron 
   (Skill. "Printer's Apron" 
           "When [Poison] is applied to this character by an enemy, apply it to the enemy instead."
-          [:passive]
-          [:buff :status/poison] 0
-          (fn [] nil)))
-
+          [:after :status/poison]
+          :passive 0
+          identity))
 
 (def lithographer 
   (Class. 
