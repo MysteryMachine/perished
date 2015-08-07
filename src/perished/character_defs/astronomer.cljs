@@ -5,49 +5,49 @@
 (def astral-hues
   (Skill. "Astral Hues"
           "Magical. Deals 3 damage to all enemies. Adds Status:Spooked to the Astronomer."
-          [:damage :magical :active]
+          [:damage/magical :status/spooked]
           :enemies 0
           identity))
 
 (def star-sludge
   (Skill. "Star Sludge"
           "Adds Status:Believer, and Status:Berserk to target."
-          [:status :active :active]
+          [:status/believer :status/berserk]
           :enemy 0
           identity))
 
 (def star-curse
   (Skill. "Star Curse"
           "Adds Status:Abducted if an attack causes the Astronomer’s health to go under 4."
-          [:passive]
+          [:after/attacked]
           :passive 0
           identity))
 
 (def true-believer
   (Skill. "True Believer"
           "Is immune to Status:Skeptic Starts the fight with Status:Believer."
-          [:passive]
+          [:before/battle :status/believer :after/attacked]
           :passive 0
           identity))
 
 (def fox-mark
   (Skill. "Mark of the Fox"
           "Adds Status:Believer to target."
-          [:status :active]
+          [:status/believer]
           :enemy 0
           identity))
 
 (def astral-abduction
   (Skill. "Astral Abduction"
           "Adds Status:Abducted to target."
-          [:Status :active]
+          [:status/abducted]
           :enemy 0
           identity))
 
 (def spooky
   (Skill. "Spooky"
           "Adds Status:Spooked to a target if they attack the Astronomer."
-          [:passive]
+          [:after/attacked]
           :passive 0
           identity))
 
