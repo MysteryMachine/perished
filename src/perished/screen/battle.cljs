@@ -30,7 +30,7 @@
                  (if clickable ".clickable")
                  (if active ".active" ""))]
     [(keyword div)
-     {:hidden (h/? hidden)
+     {:hidden (if hidden "true" "false")
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               state
