@@ -97,12 +97,8 @@ h1{
   width: 95%;
 }
 
-.party .character{
-  background-color: green;
-}
-
 .enemies .character{
-  background-color: red;
+  transform: scaleX(-1);
 }
 
 .selector{

@@ -7,7 +7,7 @@
             [perished.screen]))
 
 (def char-height 0.75)
-(def char-width 0.09)
+(def char-width "nil")
 (def char-x-offset 0.07)
 (def char-y-offset 0.075)
 (def char-separator 0.12)
@@ -30,7 +30,7 @@
                  (if clickable ".clickable")
                  (if active ".active" ""))]
     [(keyword div)
-     {:hidden (if hidden "true" "false")
+     {:hidden (h/? hidden)
       :style (affixer 
               {:height (* selector-size w) :width (* selector-size w)}
               state
@@ -48,8 +48,9 @@
         [:div.char-container
          {:key index}
          (if valid-target [:div.clickable ""])
-         [:div.character
-          {:key index 
+         [:img.character
+          {:src (str "/images/classes/" "Lithographer" "/" "Idle" "/00001.png") 
+           :key index 
            :style (affixer 
                    {:height (* char-height h) :width (* char-width w)} 
                    state
