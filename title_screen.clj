@@ -1,5 +1,6 @@
 (ns perished.title-screen
-  (:use arcadia.core)
+  (:use arcadia.core
+        perished.scenes)
   (:import [UnityEngine
             Application
             MonoBehaviour
@@ -14,7 +15,7 @@
            [options [] void] 
            [exit [] void]])
 
-(defn- -newGame [this] (Debug/Log "New Game"))
+(defn- -newGame [this] (cutscene "New Game"))
 (defn- -loadGame [this] nil)
 (defn- -options [this] nil)
 (defn- -exit [this] (Application/Quit))
