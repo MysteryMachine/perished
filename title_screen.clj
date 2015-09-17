@@ -12,5 +12,5 @@
   (Application/LoadLevel (get-scene :new-game)))
 (defn- exit [] (Application/Quit))
 
-(defcomponent TriggerNewGame [] (Start [this] (new-game)))
-(defcomponent TriggerExit [] (Start [this] (exit)))
+(defcomponent TriggerNewGame [] (OnEnable [this] (new-game)))
+(defcomponent TriggerExit [] (OnEnable [this] (exit)))
