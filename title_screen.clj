@@ -3,19 +3,19 @@
         perished.scenes)
   (:import [UnityEngine
             Application
-            MonoBehaviour
-            GameObject
-            Debug]))
+            PlayerPrefs]))
 
 (gen-class 
  :name  TitleScreen
  :extends UnityEngine.MonoBehaviour
- :methods [[newGame [] void]
-           [loadGame [] void]
-           [options [] void] 
-           [exit [] void]])
+ :methods [[NewGame [] void]
+           [LoadGame [] void]
+           [Options [] void] 
+           [Exit [] void]])
 
-(defn- -newGame [this] (cutscene "New Game"))
-(defn- -loadGame [this] nil)
-(defn- -options [this] nil)
-(defn- -exit [this] (Application/Quit))
+(defn- -NewGame [this] 
+  (PlayerPrefs/SetString "Scene" "new-game")
+  (Application/LoadLevel (:new-game scenes)))
+(defn- -LoadGame [this] nil)
+(defn- -Options [this] nil)
+(defn- -Exit [this] (Application/Quit)) 
