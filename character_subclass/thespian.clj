@@ -52,7 +52,7 @@
 
 (def thespian
   (->CharacterSubclass 
-    "Thespian"
+    "Thespian" 10
     (->SkillSet [mimic fake-death] 
                [opposite-of-people show-must-go-on])
     (->SkillSet [off-state-death monologue] 

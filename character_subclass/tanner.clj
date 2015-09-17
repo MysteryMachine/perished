@@ -52,7 +52,7 @@
 
 (def tanner
   (->CharacterSubclass 
-    "Tanner"
+    "Tanner" 10
     (->SkillSet [tan-hide lycanthropy] 
                [tough-skin pitiful])
     (->SkillSet [plead-for-death reckless-strike] 

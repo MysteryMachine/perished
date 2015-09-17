@@ -1,5 +1,6 @@
 (ns perished.character
-  (:require [perished.character-subclass.apothecary :refer [apothecary]]
+  (:require [clojure.edn :as edn]
+            [perished.character-subclass.apothecary :refer [apothecary]]
             [perished.character-subclass.aristocrat :refer [aristocrat]]
             [perished.character-subclass.astronomer :refer [astronomer]]
             [perished.character-subclass.inquisitor :refer [inquisitor]]
@@ -8,22 +9,66 @@
             [perished.character-subclass.tanner :refer [tanner]]
             [perished.character-subclass.thespian :refer [thespian]]))
 
+(def subclasses 
+  [apothecary
+   aristocrat
+   astronomer
+   inquisitor
+   journeyman
+   lithographer
+   tanner
+   thespian])
+
+(def subclass-map
+  {"Apothecary" apothecary
+   "Aristocrat" aristocrat
+   "Astronomer" astronomer
+   "Inquisitor" inquisitor
+   "Journeyman" journeyman
+   "Lithographer" lithographer
+   "Tanner" tanner
+   "Thespian" thespian})
+
+(defmulti max-health type)
+
 (defrecord CharacterClass  
-  [major-subclass minor-subclass])
+  [major-subclass minor-subclass]
+  Object
+  (ToString [this] (str [(:name major-subclass) (:name minor-subclass)])))
+
 (defrecord Character 
-  [character-class health statuses id])
+  [character-class health statuses id]
+  Object
+  (ToString [this] 
+    (str "#Character{:character-class " character-class 
+         " :id " id "}")))
+
+(defn character-reader [{:keys [character-class id]}]
+  (let [[major minor] (map #(get subclass-map %) character-class)] 
+    (->Character (->CharacterClass major minor) (:health major) [] id)))
+
+(defn read-party [s]
+  (edn/read-string 
+   {:readers 
+    {'Character character-reader}}
+   s))
 
 (defmulti  minor-skillset 
  "Given a Character or CharacterClass, returns the minor SkillSet of its minor CharacterClass"
   type)
-(defmethod minor-skillset Character [pchar] (-> pchar :character-class minor-skillset))
-(defmethod minor-skillset CharacterClass [character-class] (-> character-class :minor-class :minor-skillset))
+(defmethod minor-skillset perished.character.Character 
+  [pchar] (-> pchar :character-class minor-skillset))
+(defmethod minor-skillset perished.character.CharacterClass 
+  [character-class] (-> character-class :minor-subclass :minor-skillset))
 
 (defmulti  major-skillset 
   "Given a Character or CharacterClass, returns the major SkillSet of its major CharacterClass"
+
   type)
-(defmethod major-skillset Character [pchar] (-> pchar :character-class major-skillset))
-(defmethod major-skillset CharacterClass [character-class] (-> character-class :major-class :major-skillset))
+(defmethod major-skillset perished.character.Character 
+  [pchar] (-> pchar :character-class major-skillset))
+(defmethod major-skillset perished.character.CharacterClass 
+  [character-class] (-> character-class :major-subclass :major-skillset))
 
 (defn actives [c] 
   "Given a CharacterClass or a Character,returns a collection of
@@ -39,30 +84,25 @@
   (vec
    (flatten [(-> c major-skillset :passive-skills) 
              (-> c minor-skillset :passive-skills)
-             (if (= Character (type c)) 
+             (if (= perished.character.Character (type c)) 
                (:statuses c)
                [])])))
 
-(defn max-health [c]
-  "Returns the max of a CharacterClass or Character using its passives"
-  (reduce #(+ %1 (get %2 :max-health)) 0 (passives c)))
+(defmethod max-health perished.character.Character 
+  [c] (-> c :character-class max-health))
+(defmethod max-health perished.character.CharacterClass 
+  [c] (-> c :major-subclass :health))
 
 (defonce new-id 
   (let [counter (atom 0)]
     (fn [] (swap! counter inc))))
 
-(defn new-character [character-class] 
+(defn random-character-class [] 
+  (->CharacterClass (rand-nth subclasses) (rand-nth subclasses)))
+
+(defn random-character [] 
   "Creates a new Character from a CharacterClass"
-  (->Character character-class (max-health character-class) [] (new-id)))
+  (let [char-class (random-character-class)]
+    (->Character char-class (max-health char-class) [] (new-id))))
 
-(def subclasses 
-  [apothecary
-   aristocrat
-   astronomer
-   inquisitor
-   journeyman
-   lithographer
-   tanner
-   thespian])
-
-(defn random-character-class [] (->CharacterClass lithographer lithographer))
+(defn random-party [] (take 4 (repeatedly random-character)))

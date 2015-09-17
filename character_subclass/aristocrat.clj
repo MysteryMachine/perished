@@ -52,7 +52,7 @@
 
 (def aristocrat
   (->CharacterSubclass 
-    "Aristocrat"
+    "Aristocrat" 10
     (->SkillSet [duel murder-most-foul] 
                [dull-revenge bloodied-hands])
     (->SkillSet [truth-in-jest pour-pestilence] 

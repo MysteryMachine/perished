@@ -1,6 +1,7 @@
 (ns perished.title-screen
   (:use arcadia.core
-        perished.scenes)
+        perished.scenes
+        perished.character)
   (:import [UnityEngine
             Application
             PlayerPrefs]))
@@ -15,7 +16,8 @@
 
 (defn- -NewGame [this] 
   (PlayerPrefs/SetString "Scene" "new-game")
-  (Application/LoadLevel (:new-game scenes)))
+  (PlayerPrefs/SetString "Party" (str (random-party)))
+  (Application/LoadLevel (get-scene :new-game)))
 (defn- -LoadGame [this] nil)
 (defn- -Options [this] nil)
-(defn- -Exit [this] (Application/Quit)) 
+(defn- -Exit [this] (Application/Quit))

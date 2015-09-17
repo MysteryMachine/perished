@@ -52,7 +52,7 @@
 
 (def apothecary
   (->CharacterSubclass 
-    "Apothecary"
+    "Apothecary" 10
     (->SkillSet [transmute crimson-potion] 
                [equivalent-exchange mysterious-tattoo])
     (->SkillSet [potent-brew katar] 

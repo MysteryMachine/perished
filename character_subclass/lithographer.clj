@@ -46,7 +46,7 @@
 
 (def lithographer 
   (->CharacterSubclass 
-    "Lithographer"
+    "Lithographer" 10
     (->SkillSet [press block] 
                [stone-defense industrial-process])
     (->SkillSet [coat-weapon solvent] 

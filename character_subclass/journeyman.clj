@@ -52,7 +52,7 @@
 
 (def journeyman
   (->CharacterSubclass 
-    "Journeyman"
+    "Journeyman" 10
     (->SkillSet [desert-song scarf-snag] 
                [resurrect crimson-cloak])
     (->SkillSet [rug-pull huddle] 

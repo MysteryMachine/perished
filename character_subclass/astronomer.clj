@@ -52,7 +52,7 @@
 
 (def astronomer
   (->CharacterSubclass 
-    "Astronomer"
+    "Astronomer" 10
     (->SkillSet [astral-hues star-sludge] 
                [star-curse true-believer])
     (->SkillSet [astral-abduction fox-mark] 

@@ -52,7 +52,7 @@
 
 (def inquisitor
   (->CharacterSubclass 
-    "Inquisitor"
+    "Inquisitor" 10
     (->SkillSet [medical-treatment agents-flintlock] 
                [true-skeptic field-doctor])
     (->SkillSet [mark-of-the-hound thumb-screws] 
